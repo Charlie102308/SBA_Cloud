@@ -1,0 +1,31 @@
+[Programming proceudres break down]
+
+1. Declare variables for 2 data files
+2. All Menus (Main, Admin)
+3. Read Transaction file and list file contents (Admin 7)
+4. Read Inventory file and list file contents (Admin 1)
+5. Inventory List with sorting (Admin 2, 3)
+6. Inventory NEW ITEM (Admin 4)
+7. Inventory EDIT ITEM (Admin 5)
+8. Inventory UPDATE (Admin 6)
+---------------------------------------------------------
+9. Self Help Sale (Main 1)
+10. Search Item (Main 2)
+11. Authentication for entering Admin menu
+12. Validation for input
+
+
+[Reminder]
+
+data structure definition
+inv_cnt, trn_cnt
+inventory number limit?
+transaction number limit?
+only one file pointer (fp)
+user input handling: string then convert if necessary (aoti, atof)
+Self Help Sale for both buy and sell
+date stamp, time stamp?
+/**/ file handling reference point
+/***/ different approach for saving transaction
+/****/ very useful function for implement of searching: printf("%s",item[get_item_number(5155)].brand);
+user friendliness
