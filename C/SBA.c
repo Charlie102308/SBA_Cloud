@@ -567,5 +567,8 @@ void Update_Inv()
 }
 void Complete_Trn(int Positive)
 {
+    struct tm Time;
+    time_t t = time(NULL);
+    Time = *localtime(&t);
     
 }
