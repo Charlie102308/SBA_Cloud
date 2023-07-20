@@ -11,8 +11,10 @@
             "cwd": "${fileDirname}",
             "environment": [],
             "externalConsole": true,
-            "MIMode": "lldb",
-            "preLaunchTask": "C/C++: gcc build active file"
+            "MIMode": "gdb",
+            "preLaunchTask": "C/C++: gcc build active file",
+            "targetArchitecture": "x86_64",
+            "logging": { "engineLogging": true, "trace": true, "traceResponse": true }
         }
     ]
 }

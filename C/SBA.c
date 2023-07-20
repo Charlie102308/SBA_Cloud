@@ -549,7 +549,7 @@ void Update_Inv()
     transaction[Trn_cnt + 1].barcode = atoi(tempstr);
     do
     {
-         printf("Add/Decrease(A/D):");
+        printf("Add/Decrease(A/D):");
         fgets(tempstr, 15, stdin);
         if((Flag = strcmp(tempstr, "A")) == 0)
         {
@@ -565,10 +565,11 @@ void Update_Inv()
         }
     } while (Flag != 0);
 }
+
 void Complete_Trn(int Positive)
 {
     struct tm Time;
     time_t t = time(NULL);
     Time = *localtime(&t);
-    
+    sprintf(transaction[Trn_cnt + 1].td, "%d-%d-%d", Time.tm_year, Time.tm_mon, Time.tm_mday);
 }
