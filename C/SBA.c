@@ -28,9 +28,9 @@ struct UserType
     int id;
 };
 struct UserType User[10];
- 
+
 FILE *fp;
- 
+
 int Inv_cnt = 0, Trn_cnt = 0, Cnt = 0, i, k, User_ID;
 char tempstr[1000];
 char Password[12] = "StmcPos1983";
@@ -76,6 +76,55 @@ int main()
 		}
 	} while(strcmp(tempstr, "9") != 0);
 	return 0;
+}
+void Search_inv()
+{
+	char Continue, Search[50];
+	int Found[Inv_cnt], l, Flag;
+	do
+	{
+		l = 0;
+        for(i = 0;i < Inv_cnt;i++)
+        {
+            Found[i] = 0;
+        }
+		printf("What item do you want to search:");
+		fgets(Search, 50, stdin);
+		Search[strlen(Search) - 1] = '\0';
+		for(i = 1;i <= Inv_cnt;i++)
+		{
+			k = 0;
+			Flag = 0;
+			while(k < strlen(item[i].product) && Flag == 0)
+			{
+				strncpy(tempstr, item[i].product + k, strlen(Search));
+                tempstr[strlen(Search)] = '\0';
+				if(strcmp(tempstr, Search) == 0)
+				{
+					Found[l] = i;
+					l++;
+					Flag = 1;
+				}
+                k++;
+			}
+		}
+		if(l == 0)
+		{
+			printf("No result found\n");
+		}
+		else
+		{
+            printf("Result:\n");
+			for(i = 0;i < l;i++)
+			{
+				printf("%d.Product name:%s\n", i + 1, item[Found[i]].product);
+				printf("  Price:%0.1f\n", item[Found[i]].price);
+			}
+		}
+		printf("Continue?(y/n):");
+		scanf("%c", &Continue);
+		fflush(stdin);
+	} while (Continue == 'y');
 }
 void start_admin()
 {
@@ -174,6 +223,36 @@ int Authentication()
     {
         return 0;
     }
+}
+int Check_User(char Input[30])
+{
+    Input[strlen(Input) - 1] = '\0';
+    fp = fopen("c:\\user.txt", "r");
+    fgets(tempstr, 99, fp);
+    Cnt = 0;
+    while(!feof(fp))
+    {
+        Cnt++;
+        fgets(User[Cnt].Name, 30, fp);
+        User[Cnt].Name[strlen(User[Cnt].Name) - 2] = '\0';
+        fgets(User[Cnt].Role, 10, fp);
+        User[Cnt].Role[strlen(User[Cnt].Role) - 2] = '\0';
+        fgets(tempstr, 10, fp);
+        User[Cnt].id = atoi(tempstr);
+    }
+    fclose(fp);
+    for(i = 1;i <= Cnt;i++)
+    {
+        if(strcmp(User[i].Role, "teacher") == 0)
+        {
+            if(strcmp(Input, User[i].Name) == 0 || User[i].id == atoi(Input))
+            {
+				User_ID = i;
+                return 1;
+            }
+        }
+    }
+    return 2;
 }
 int Read_inv()
 {
@@ -359,55 +438,6 @@ void Write_Inv()
     printf("New Inventory\n");
     Print_inv();
 }
-void Search_inv()
-{
-	char Continue, Search[50];
-	int Found[Inv_cnt], l, Flag;
-	do
-	{
-		l = 0;
-        for(i = 0;i < Inv_cnt;i++)
-        {
-            Found[i] = 0;
-        }
-		printf("What item do you want to search:");
-		fgets(Search, 50, stdin);
-		Search[strlen(Search) - 1] = '\0';
-		for(i = 1;i <= Inv_cnt;i++)
-		{
-			k = 0;
-			Flag = 0;
-			while(k < strlen(item[i].product) && Flag == 0)
-			{
-				strncpy(tempstr, item[i].product + k, strlen(Search));
-                tempstr[strlen(Search)] = '\0';
-				if(strcmp(tempstr, Search) == 0)
-				{
-					Found[l] = i;
-					l++;
-					Flag = 1;
-				}
-                k++;
-			}
-		}
-		if(l == 0)
-		{
-			printf("No result found\n");
-		}
-		else
-		{
-            printf("Result:\n");
-			for(i = 0;i < l;i++)
-			{
-				printf("%d.Product name:%s\n", i + 1, item[Found[i]].product);
-				printf("  Price:%0.1f\n", item[Found[i]].price);
-			}
-		}
-		printf("Continue?(y/n):");
-		scanf("%c", &Continue);
-		fflush(stdin);
-	} while (Continue == 'y');
-}
 void Edit_inv()
 {
     char Continue;
@@ -472,68 +502,6 @@ void Edit_inv()
         fflush(stdin);
     } while(Continue == 'y');
 }
-int Read_Trn()
-{
-    fp = fopen("c:\\transaction.txt", "r");
-    fgets(tempstr, 99, fp);
-    Cnt = 0;
-    while(!feof(fp))
-    {
-        Cnt++;
-        fgets(transaction[Cnt].td, 13, fp);
-        transaction[Cnt].td[strlen(transaction[Cnt].td) - 1] = '\0';
-        fgets(transaction[Cnt].tt, 11, fp);
-        transaction[Cnt].tt[strlen(transaction[Cnt].tt) - 1] = '\0';
-        fgets(tempstr, 99, fp);
-        transaction[Cnt].id = atoi(tempstr);
-        fgets(tempstr, 99, fp);
-        transaction[Cnt].price = atof(tempstr);
-        fgets(tempstr, 99, fp);
-        transaction[Cnt].qty = atoi(tempstr);
-        fgets(tempstr, 99, fp);
-        transaction[Cnt].barcode = atoi(tempstr);
-    }
-    fclose(fp);
-    return Cnt - 1;
-}
-void Print_Trn()
-{
-    for(i = 1;i <= Trn_cnt;i++)
-    {
-        printf("%d Date:%s\nTimes:%s\nId:%d\nPrice:%0.2f\nQuantity:%d\nBarcode:%d\n\n", i, transaction[i].td, transaction[i].tt, transaction[i].id, transaction[i].price, transaction[i].qty, transaction[i].barcode);
-    }
-}
-
-int Check_User(char Input[30])
-{
-    Input[strlen(Input) - 1] = '\0';
-    fp = fopen("c:\\user.txt", "r");
-    fgets(tempstr, 99, fp);
-    Cnt = 0;
-    while(!feof(fp))
-    {
-        Cnt++;
-        fgets(User[Cnt].Name, 30, fp);
-        User[Cnt].Name[strlen(User[Cnt].Name) - 2] = '\0';
-        fgets(User[Cnt].Role, 10, fp);
-        User[Cnt].Role[strlen(User[Cnt].Role) - 2] = '\0';
-        fgets(tempstr, 10, fp);
-        User[Cnt].id = atoi(tempstr);
-    }
-    fclose(fp);
-    for(i = 1;i <= Cnt;i++)
-    {
-        if(strcmp(User[i].Role, "teacher") == 0)
-        {
-            if(strcmp(Input, User[i].Name) == 0 || User[i].id == atoi(Input))
-            {
-				User_ID = i;
-                return 1;
-            }
-        }
-    }
-    return 2;
-}
 void Update_Inv()
 {
     int Flag = 1;
@@ -568,7 +536,6 @@ void Update_Inv()
         }
     } while (Flag != 0);
 }
-
 void Complete_Trn(int Positive)
 {
     struct tm Time;
@@ -595,4 +562,35 @@ void Complete_Trn(int Positive)
     }
     fclose(fp);
     printf("Transaction Complete!\n\n");
+}
+int Read_Trn()
+{
+    fp = fopen("c:\\transaction.txt", "r");
+    fgets(tempstr, 99, fp);
+    Cnt = 0;
+    while(!feof(fp))
+    {
+        Cnt++;
+        fgets(transaction[Cnt].td, 13, fp);
+        transaction[Cnt].td[strlen(transaction[Cnt].td) - 1] = '\0';
+        fgets(transaction[Cnt].tt, 11, fp);
+        transaction[Cnt].tt[strlen(transaction[Cnt].tt) - 1] = '\0';
+        fgets(tempstr, 99, fp);
+        transaction[Cnt].id = atoi(tempstr);
+        fgets(tempstr, 99, fp);
+        transaction[Cnt].price = atof(tempstr);
+        fgets(tempstr, 99, fp);
+        transaction[Cnt].qty = atoi(tempstr);
+        fgets(tempstr, 99, fp);
+        transaction[Cnt].barcode = atoi(tempstr);
+    }
+    fclose(fp);
+    return Cnt - 1;
+}
+void Print_Trn()
+{
+    for(i = 1;i <= Trn_cnt;i++)
+    {
+        printf("%d Date:%s\nTimes:%s\nId:%d\nPrice:%0.2f\nQuantity:%d\nBarcode:%d\n\n", i, transaction[i].td, transaction[i].tt, transaction[i].id, transaction[i].price, transaction[i].qty, transaction[i].barcode);
+    }
 }
