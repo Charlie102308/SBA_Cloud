@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
-    "configurations": [
+    "configurations": 
+    [
         {
             "name": "C/C++: gcc build and debug active file",
             "type": "cppdbg",
@@ -14,7 +15,6 @@
             "MIMode": "gdb",
             "preLaunchTask": "C/C++: gcc build active file",
             "targetArchitecture": "x86_64",
-            "logging": { "engineLogging": true, "trace": true, "traceResponse": true }
-        }
+        },
     ]
 }

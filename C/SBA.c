@@ -537,6 +537,7 @@ int Check_User(char Input[30])
 void Update_Inv()
 {
     int Flag = 1;
+    Trn_cnt = Read_Trn();
     transaction[Trn_cnt + 1].id = User[User_ID].id;
     printf("Price:");
     fgets(tempstr, 15, stdin);
@@ -546,11 +547,13 @@ void Update_Inv()
     transaction[Trn_cnt + 1].qty = atoi(tempstr);
     printf("Barcode:");
     fgets(tempstr, 5, stdin);
+    fflush(stdin);
     transaction[Trn_cnt + 1].barcode = atoi(tempstr);
     do
     {
         printf("Add/Decrease(A/D):");
-        fgets(tempstr, 15, stdin);
+        fgets(tempstr, 2, stdin);
+        fflush(stdin);
         if((Flag = strcmp(tempstr, "A")) == 0)
         {
             Complete_Trn(1);
@@ -571,5 +574,25 @@ void Complete_Trn(int Positive)
     struct tm Time;
     time_t t = time(NULL);
     Time = *localtime(&t);
-    sprintf(transaction[Trn_cnt + 1].td, "%d-%d-%d", Time.tm_year, Time.tm_mon, Time.tm_mday);
+    sprintf(transaction[Trn_cnt + 1].td, "%d-%d-%d", 1900+Time.tm_year, 1+Time.tm_mon, Time.tm_mday);
+    sprintf(transaction[Trn_cnt + 1].tt, "%d:%d:%d", Time.tm_hour, Time.tm_min, Time.tm_sec);
+    transaction[Trn_cnt + 1].id = User[User_ID].id;
+    if(Positive == 1)
+    {
+        transaction[Trn_cnt + 1].qty *= -1;
+    }
+    Trn_cnt++;
+    fp = fopen("c:\\transaction.txt", "w");
+    fprintf(fp, "#date,time,id,price,qty,barcode\n");
+    for(i = 1;i <= Trn_cnt;i++)
+    {
+        fprintf(fp, "%s\n", transaction[i].td);
+        fprintf(fp, "%s\n", transaction[i].tt);
+        fprintf(fp, "%d\n", transaction[i].id);
+        fprintf(fp, "%0.2f\n", transaction[i].price);
+        fprintf(fp, "%d\n", transaction[i].qty);
+        fprintf(fp, "%d\n", transaction[i].barcode);
+    }
+    fclose(fp);
+    printf("Transaction Complete!\n\n");
 }
