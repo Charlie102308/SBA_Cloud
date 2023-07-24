@@ -51,6 +51,7 @@ int Check_User(char[30]);
 void start_admin();
 int Authentication();
 
+void SalesSystem();
 int main()
 {
     do{
@@ -63,7 +64,7 @@ int main()
 		gets(tempstr);
         if(strcmp(tempstr, "1") == 0)
         {
-			// sale sub program
+			SalesSystem();
         }
         else if(strcmp(tempstr, "2") == 0)
         {
@@ -593,4 +594,9 @@ void Print_Trn()
     {
         printf("%d Date:%s\nTimes:%s\nId:%d\nPrice:%0.2f\nQuantity:%d\nBarcode:%d\n\n", i, transaction[i].td, transaction[i].tt, transaction[i].id, transaction[i].price, transaction[i].qty, transaction[i].barcode);
     }
+}
+
+void SalesSystem()
+{
+    
 }
