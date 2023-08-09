@@ -598,5 +598,8 @@ void Print_Trn()
 
 void SalesSystem()
 {
-    
+    int Inv_Barcode;
+    printf("Item's Barcode:");
+    fgets(tempstr, 15, stdin);
+    Inv_Barcode = atoi(tempstr);
 }
