@@ -47,14 +47,17 @@ int Read_Trn();
 void Print_Trn();
 void Complete_Trn(int);
 
-int Check_User(char[30]);
+int Check_User(char[30], int);
 void start_admin();
 int Authentication();
 
 void SalesSystem();
+int Stockcount(int);
 int main()
 {
-    do{
+    do
+    {
+        printf("---------------------------------------------------\n");
 		printf("Main Menu Name\n");
 		printf("1. Self Help Sale\n");
 		printf("2. Search an item\n");
@@ -78,6 +81,80 @@ int main()
 	} while(strcmp(tempstr, "9") != 0);
 	return 0;
 }
+void SalesSystem()
+{
+    int Inv_Barcode = 0, Inv_No = 0, Found = 0, Qty = 0;
+	char Input[30], Continue;
+	do
+    {
+        printf("---------------------------------------------------\n");
+		printf("Name/Id:");
+		fgets(Input, 30, stdin);
+        if(Check_User(Input, 0) != 1)
+        {
+            printf("Invalid Input\n");
+            printf("Continue(y/n):");
+            scanf("%c",&Continue);
+            fflush(stdin);
+        }
+        else
+        {
+            Continue = 'n';
+        }
+	} while (Continue == 'y');
+    Trn_cnt = Read_Trn();
+    printf("Hello %s, id:%d\n", User[User_ID].Name, User[User_ID].id);
+    do
+    {
+        transaction[Trn_cnt + 1].id = User[User_ID].id;
+        printf("---------------------------------------------------\n");
+        printf("Item's Barcode:");
+        fgets(tempstr, 15, stdin);
+        Inv_Barcode = atoi(tempstr);
+	    Inv_cnt = Read_inv();
+	    for(i = 1;i <= Inv_cnt;i++)
+	    {
+		    if(item[i].barcode == Inv_Barcode)
+		    {
+			    Inv_No = i;
+                transaction[Trn_cnt + 1].barcode = Inv_Barcode;
+			    Found = 1;
+		    }
+	    }
+	    if(Found == 1)
+	    {
+            printf("Item:%s\nPrice:%0.2f\nRemaining Quantity:%d\n",item[Inv_No].product, item[Inv_No].price, Stockcount(Inv_Barcode));
+            printf("How many do you want:");
+            fgets(tempstr, 3, stdin);
+            transaction[Trn_cnt + 1].qty = atoi(tempstr);
+            printf("Total Price:%0.2f\n",item[Inv_No].price * (float)transaction[Trn_cnt + 1].qty);
+            transaction[Trn_cnt + 1].price = item[Inv_No].price;
+            Complete_Trn(0);
+            printf("Continue(y/n):");
+            scanf("%c",&Continue);
+            fflush(stdin);
+	    }
+        else
+        {
+            printf("Item not found\n");
+            printf("Continue(y/n):");
+            scanf("%c",&Continue);
+            fflush(stdin);
+        }
+    } while(Continue == 'y');
+}
+int Stockcount(int Inv_Barcode)
+{
+	int Total_Stock = 0;
+	for(i = 1;i <= Trn_cnt;i++)
+	{
+		if(transaction[i].barcode == Inv_Barcode)
+		{
+			Total_Stock -=  transaction[i].qty;
+		}
+	}
+	return Total_Stock;
+}
 void Search_inv()
 {
 	char Continue, Search[50];
@@ -89,6 +166,7 @@ void Search_inv()
         {
             Found[i] = 0;
         }
+        printf("---------------------------------------------------\n");
 		printf("What item do you want to search:");
 		fgets(Search, 50, stdin);
 		Search[strlen(Search) - 1] = '\0';
@@ -141,6 +219,7 @@ void start_admin()
         }
         if(Access == 1)
         {
+            printf("---------------------------------------------------\n");
 			printf("Hello %s, id:%d\n", User[User_ID].Name, User[User_ID].id);
 		    printf("Sub Menu Name\n");
 		    printf("1. Inventory LIST\n");
@@ -155,34 +234,41 @@ void start_admin()
 		    gets(tempstr);
 		    if(strcmp(tempstr,"1") == 0)
             {
+                printf("---------------------------------------------------\n");
 			    Inv_cnt = Read_inv();
 			    Print_inv();
             }
             else if(strcmp(tempstr,"2") == 0)
             {
+                printf("---------------------------------------------------\n");
                 Inv_cnt = Read_inv();
                 Print_inv_in_order(item, 1);
             }
             else if(strcmp(tempstr,"3") == 0)
             {
+                printf("---------------------------------------------------\n");
                 Inv_cnt = Read_inv();
                 Print_inv_in_order(item, 0);
             }
             else if(strcmp(tempstr,"4") == 0)
             {
+                printf("---------------------------------------------------\n");
                 Inv_cnt = Read_inv();
                 New_inv();
             }
             else if(strcmp(tempstr,"5") == 0)
             {
+                printf("---------------------------------------------------\n");
                 Edit_inv();
             }
             else if(strcmp(tempstr, "6") == 0)
             {
+                printf("---------------------------------------------------\n");
                 Update_Inv();
             }
             else if(strcmp(tempstr,"7") == 0)
             {
+                printf("---------------------------------------------------\n");
                 Trn_cnt = Read_Trn();
                 Print_Trn();
             }
@@ -202,9 +288,10 @@ void start_admin()
 int Authentication()
 {
     char Input[31];
+    printf("---------------------------------------------------\n");
     printf("Name/Id:");
     fgets(Input, 30, stdin);
-    if(Check_User(Input) == 1)
+    if(Check_User(Input, 1) == 1)
     {
         printf("Password:");
         fgets(Input, 12, stdin);
@@ -225,7 +312,7 @@ int Authentication()
         return 0;
     }
 }
-int Check_User(char Input[30])
+int Check_User(char Input[30], int Admin)
 {
     Input[strlen(Input) - 1] = '\0';
     fp = fopen("c:\\user.txt", "r");
@@ -252,8 +339,16 @@ int Check_User(char Input[30])
                 return 1;
             }
         }
+		else if(strcmp(User[i].Role, "student") == 0 && Admin == 0)
+        {
+            if(strcmp(Input, User[i].Name) == 0 || User[i].id == atoi(Input))
+            {
+				User_ID = i;
+                return 1;
+            }
+        }
     }
-    return 2;
+    return 0;
 }
 int Read_inv()
 {
@@ -594,12 +689,4 @@ void Print_Trn()
     {
         printf("%d Date:%s\nTimes:%s\nId:%d\nPrice:%0.2f\nQuantity:%d\nBarcode:%d\n\n", i, transaction[i].td, transaction[i].tt, transaction[i].id, transaction[i].price, transaction[i].qty, transaction[i].barcode);
     }
-}
-
-void SalesSystem()
-{
-    int Inv_Barcode;
-    printf("Item's Barcode:");
-    fgets(tempstr, 15, stdin);
-    Inv_Barcode = atoi(tempstr);
 }
