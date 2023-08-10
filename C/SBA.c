@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <termios.h>
+#include <unistd.h>
 struct itemType
 {
     char category[30];
@@ -34,6 +36,7 @@ FILE *fp;
 int Inv_cnt = 0, Trn_cnt = 0, Cnt = 0, i, k, User_ID;
 char tempstr[1000];
 char Password[12] = "StmcPos1983";
+int getch();
 void Search_inv();
 int Read_inv();
 void Print_inv();
@@ -288,15 +291,32 @@ void start_admin()
 int Authentication()
 {
     char Input[31];
+    int ch;
     printf("---------------------------------------------------\n");
     printf("Name/Id:");
     fgets(Input, 30, stdin);
     if(Check_User(Input, 1) == 1)
     {
         printf("Password:");
-        fgets(Input, 12, stdin);
-        fflush(stdin);
-        Input[11] = '\0';
+        i = 0;
+        while ((ch = getch()) != '\n')
+        {
+            if (ch == 127 || ch == 8) { // handle backspace
+                if (i != 0)
+                {
+                    i--;
+                    printf("\b \b");
+                }
+            } 
+            else 
+            {
+                Input[i] = ch;
+                i++;
+                printf("*");
+            }
+        }
+        printf("\n");
+        Input[i] = '\0';
         if(strcmp(Input, Password) == 0)
         {
             
@@ -689,4 +709,24 @@ void Print_Trn()
     {
         printf("%d Date:%s\nTimes:%s\nId:%d\nPrice:%0.2f\nQuantity:%d\nBarcode:%d\n\n", i, transaction[i].td, transaction[i].tt, transaction[i].id, transaction[i].price, transaction[i].qty, transaction[i].barcode);
     }
+}
+int getch() {
+    int ch;
+    // struct to hold the terminal settings
+    struct termios old_settings, new_settings;
+    // take default setting in old_settings
+    tcgetattr(STDIN_FILENO, &old_settings);
+    // make of copy of it (Read my previous blog to know 
+    // more about how to copy struct)
+    new_settings = old_settings;
+    // change the settings for by disabling ECHO mode
+    // read man page of termios.h for more settings info
+    new_settings.c_lflag &= ~(ICANON | ECHO);
+    // apply these new settings
+    tcsetattr(STDIN_FILENO, TCSANOW, &new_settings);
+    // now take the input in this mode
+    ch = getchar();
+    // reset back to default settings
+    tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
+    return ch;
 }
