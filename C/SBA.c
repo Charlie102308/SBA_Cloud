@@ -67,7 +67,9 @@ int main()
 		printf("3. Admin\n");
 		printf("9. Quit\n");
 		printf("Select a function: ");
-		gets(tempstr);
+		fgets(tempstr, 2, stdin);
+        tempstr[strlen(tempstr)] = '\0';
+        fflush(stdin);
         if(strcmp(tempstr, "1") == 0)
         {
 			SalesSystem();
@@ -97,7 +99,7 @@ void SalesSystem()
         {
             printf("Invalid Input\n");
             printf("Continue(y/n):");
-            scanf("%c",&Continue);
+            Continue = getchar();
             fflush(stdin);
         }
         else
@@ -134,14 +136,14 @@ void SalesSystem()
             transaction[Trn_cnt + 1].price = item[Inv_No].price;
             Complete_Trn(0);
             printf("Continue(y/n):");
-            scanf("%c",&Continue);
+            Continue = getchar();
             fflush(stdin);
 	    }
         else
         {
             printf("Item not found\n");
             printf("Continue(y/n):");
-            scanf("%c",&Continue);
+            Continue = getchar();
             fflush(stdin);
         }
     } while(Continue == 'y');
@@ -161,7 +163,7 @@ int Stockcount(int Inv_Barcode)
 void Search_inv()
 {
 	char Continue, Search[50];
-	int Found[Inv_cnt], l, Flag;
+	int Found[Inv_cnt + 1], l, Flag;
 	do
 	{
 		l = 0;
@@ -204,8 +206,8 @@ void Search_inv()
 			}
 		}
 		printf("Continue?(y/n):");
-		scanf("%c", &Continue);
-		fflush(stdin);
+		Continue = getchar();
+            fflush(stdin);
 	} while (Continue == 'y');
 }
 void start_admin()
@@ -234,7 +236,9 @@ void start_admin()
 		    printf("7. Transaction LIST\n");
 		    printf("9. Quit\n");
 		    printf("Select a function: ");
-		    gets(tempstr);
+		    fgets(tempstr, 2, stdin);
+            tempstr[strlen(tempstr)] = '\0';
+            fflush(stdin);
 		    if(strcmp(tempstr,"1") == 0)
             {
                 printf("---------------------------------------------------\n");
@@ -279,12 +283,13 @@ void start_admin()
         else
         {
             printf("Continue?(y/n):");
-            scanf("%c", &Continue);
+            Continue = getchar();
             fflush(stdin);
             if(Continue == 'n')
             {
                 strcpy(tempstr, "9");
             }
+            
         }
     } while(strcmp(tempstr,"9") != 0);
 }
@@ -390,7 +395,15 @@ int Read_inv()
         item[Cnt].barcode = atoi(tempstr);
     }
     fclose(fp);
-    return Cnt - 1;
+    if(Cnt > 0)
+    {
+        return Cnt - 1;
+    }
+    else
+    {
+        printf("No Inventory Found");
+        return 0;
+    }
 }
 void Print_inv()
 {
@@ -403,7 +416,7 @@ void Print_inv_in_order(struct itemType tempitem[], int sort)
 {
     int pass, last, order;
     printf("Ascending or Descending(1/2):");
-    gets(tempstr);
+    fgets(tempstr, 3, stdin);
     order = atoi(tempstr);
     for(pass = 2;pass <= Inv_cnt;pass++)
     {
@@ -533,8 +546,8 @@ void New_inv()
         item[Inv_cnt + 1].barcode = atoi(tempstr);
         Inv_cnt++;
         printf("Continue?(y/n)");
-        scanf("%c", &Continue);
-        fflush(stdin);
+        Continue = getchar();
+            fflush(stdin);
     } while(Continue == 'y');
     Write_Inv();
 }
@@ -614,8 +627,8 @@ void Edit_inv()
             }
         }
         printf("Continue?(y/n):");
-        scanf("%c", &Continue);
-        fflush(stdin);
+        Continue = getchar();
+            fflush(stdin);
     } while(Continue == 'y');
 }
 void Update_Inv()
