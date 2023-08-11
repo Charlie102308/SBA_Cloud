@@ -729,8 +729,7 @@ int getch() {
     struct termios old_settings, new_settings;
     // take default setting in old_settings
     tcgetattr(STDIN_FILENO, &old_settings);
-    // make of copy of it (Read my previous blog to know 
-    // more about how to copy struct)
+    // make of copy of it
     new_settings = old_settings;
     // change the settings for by disabling ECHO mode
     // read man page of termios.h for more settings info
