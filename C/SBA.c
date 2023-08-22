@@ -306,7 +306,8 @@ int Authentication()
         i = 0;
         while ((ch = getch()) != '\n')
         {
-            if (ch == 127 || ch == 8) { // handle backspace
+            if (ch == 127 || ch == 8) // handle backspace
+            {
                 if (i != 0)
                 {
                     i--;
