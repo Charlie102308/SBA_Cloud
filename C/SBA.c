@@ -178,12 +178,14 @@ void Search_inv()
 {
 	char Continue, Search[50];
 	int Found[Inv_cnt + 1], l, Flag, Mode;
+    printf("---------------------------------------------------\n");
     printf("Search for Hot item or price of an item?(1/2)");
     fgets(tempstr, 2, stdin);
     tempstr[strlen(tempstr)] = '\0';
     fflush(stdin);
     if(strcmp(tempstr, "1") == 0)
     {
+        printf("---------------------------------------------------\n");
         Hot_item();
     }
     if(strcmp(tempstr, "2") == 0)
@@ -250,18 +252,7 @@ void Hot_item()
     }
     for(l = 1;l <= Trn_cnt;l++)
     {
-        for(k = 1;k <= Sold_item_Cnt;k++)
-        {
-            for(i = 1;i <= Inv_cnt;i++)
-            {
-                if(item_barcode[k] == item[i].barcode)
-                {
-                    printf("%d. %s\t %dSold\n",k , item[i].product, Sold_qty[k]);
-                }
-            }
-        }
         sprintf(Input, "%d", transaction[l].id);
-        printf("%s\n",Input);
         if(transaction[l].qty > 0 && Check_User(Input, 0) == 1)
         {
             k = 1;
@@ -317,7 +308,7 @@ void Hot_item()
         {
             if(item_barcode[k] == item[i].barcode)
             {
-                printf("%d. %s\t %dSold\n",k , item[i].product, Sold_qty[k]);
+                printf("%d. %s\t %d Sold\n",k , item[i].product, Sold_qty[k]);
             }
         }
     }
