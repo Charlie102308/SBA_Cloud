@@ -241,32 +241,46 @@ void Hot_item()
     Inv_cnt = Read_inv();
     Trn_cnt = Read_Trn();
     int Sold_qty[Inv_cnt], item_barcode[Inv_cnt], Sold_item_Cnt = 0, Hot[Inv_cnt], pass, last, l;
+    char Input[30];
     Read_User();
+    for(l = 1;l <= Inv_cnt;l++)
+    {
+        Sold_qty[l] = 0;
+        item_barcode[l] = 0;
+    }
     for(l = 1;l <= Trn_cnt;l++)
     {
-        sprintf(tempstr, "%d", transaction[l].id);
-        printf("%d\n",transaction[l].id);
-        printf("%d\n",Check_User(tempstr, 0));
-        /*if(transaction[l].qty > 0 && Check_User(tempstr, 0) == 1)
+        sprintf(Input, "%d", transaction[l].id);
+        printf("%s\n",Input);
+        if(transaction[l].qty > 0 && Check_User(Input, 0) == 1)
         {
             k = 1;
             if(Sold_item_Cnt == 0)
             {
-                item_barcode[k] = transaction[l].id;
+                item_barcode[k] = transaction[l].barcode;
                 Sold_qty[k] = abs(transaction[l].qty);
                 Sold_item_Cnt++;
             }
-            while(transaction[l].id != item_barcode[k])
+            while(transaction[l].barcode != item_barcode[k])
             {
                 k++;
+                printf("%d\n",k);
+                if(item_barcode[k] == 0)
+                {
+                    item_barcode[k] = transaction[l].barcode;
+                    Sold_qty[k] += transaction[l].qty;
+                }
                 if(Sold_item_Cnt < k)
                 {
                     Sold_item_Cnt = k;
                 }
             }
-            item_barcode[k] = transaction[l].barcode;
-            Sold_qty[k] += abs(transaction[l].qty);
-        }*/
+            if(k == 1)
+            {
+                item_barcode[k] = transaction[l].barcode;
+                Sold_qty[k] += transaction[l].qty;
+            }
+        }
     }
     for(pass = 2;pass <= Sold_item_Cnt;pass++)
     {
@@ -289,7 +303,7 @@ void Hot_item()
         {
             if(item_barcode[k] == item[i].barcode)
             {
-                printf("%d. %s\t %dSold",k , item[i].product, Sold_qty[k]);
+                printf("%d. %s\t %dSold\n",k , item[i].product, Sold_qty[k]);
             }
         }
     }
