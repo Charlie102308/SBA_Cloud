@@ -250,6 +250,16 @@ void Hot_item()
     }
     for(l = 1;l <= Trn_cnt;l++)
     {
+        for(k = 1;k <= Sold_item_Cnt;k++)
+        {
+            for(i = 1;i <= Inv_cnt;i++)
+            {
+                if(item_barcode[k] == item[i].barcode)
+                {
+                    printf("%d. %s\t %dSold\n",k , item[i].product, Sold_qty[k]);
+                }
+            }
+        }
         sprintf(Input, "%d", transaction[l].id);
         printf("%s\n",Input);
         if(transaction[l].qty > 0 && Check_User(Input, 0) == 1)
@@ -258,14 +268,17 @@ void Hot_item()
             if(Sold_item_Cnt == 0)
             {
                 item_barcode[k] = transaction[l].barcode;
-                Sold_qty[k] = abs(transaction[l].qty);
                 Sold_item_Cnt++;
             }
             while(transaction[l].barcode != item_barcode[k])
             {
                 k++;
-                printf("%d\n",k);
                 if(item_barcode[k] == 0)
+                {
+                    item_barcode[k] = transaction[l].barcode;
+                    Sold_qty[k] += transaction[l].qty;
+                }
+                else if(transaction[l].barcode == item_barcode[k])
                 {
                     item_barcode[k] = transaction[l].barcode;
                     Sold_qty[k] += transaction[l].qty;
@@ -274,6 +287,7 @@ void Hot_item()
                 {
                     Sold_item_Cnt = k;
                 }
+                
             }
             if(k == 1)
             {
