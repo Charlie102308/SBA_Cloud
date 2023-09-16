@@ -58,6 +58,7 @@ int Authentication();
 
 void SalesSystem();
 int Stockcount(int);
+
 int main()
 {
     do
@@ -237,7 +238,6 @@ void Search_inv()
         } while (Continue == 'y');
     }
 }
-
 void Hot_item()
 {
     Inv_cnt = Read_inv();
@@ -831,7 +831,8 @@ void Print_Trn()
         printf("%d Date:%s\nTimes:%s\nId:%d\nPrice:%0.2f\nQuantity:%d\nBarcode:%d\n\n", i, transaction[i].td, transaction[i].tt, transaction[i].id, transaction[i].price, transaction[i].qty, transaction[i].barcode);
     }
 }
-int getch() {
+int getch() 
+{
     int ch;
     // struct to hold the terminal settings
     struct termios old_settings, new_settings;
