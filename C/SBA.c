@@ -90,8 +90,8 @@ int main()
 }
 void SalesSystem()
 {
-    int Inv_Barcode = 0, Inv_No = 0, Found = 0, Qty = 0;
-	char Input[30], Continue;
+    int Inv_Barcode = 0, Inv_No = 0, Found = 0, Qty = 0, flag = 0;
+	char Input[30], Continue = 'n';
 	do
     {
         printf("---------------------------------------------------\n");
@@ -99,56 +99,68 @@ void SalesSystem()
 		fgets(Input, 30, stdin);
         if(Check_User(Input, 0) != 1)
         {
-            printf("Invalid Input\n");
-            printf("Continue(y/n):");
-            Continue = getchar();
-            fflush(stdin);
+            if(Check_User(Input, 1) != 1)
+            {
+                printf("Invalid Input\n");
+                printf("Continue(y/n):");
+                Continue = getchar();
+                fflush(stdin);
+            }
+            else
+            {
+                flag = 1;
+                Continue = 'n';
+            }
         }
         else
         {
+            flag = 1;
             Continue = 'n';
         }
 	} while (Continue == 'y');
-    Trn_cnt = Read_Trn();
-    printf("Hello %s, id:%d\n", User[User_ID].Name, User[User_ID].id);
-    do
+    if(flag == 1)
     {
-        transaction[Trn_cnt + 1].id = User[User_ID].id;
-        printf("---------------------------------------------------\n");
-        printf("Item's Barcode:");
-        fgets(tempstr, 15, stdin);
-        Inv_Barcode = atoi(tempstr);
-	    Inv_cnt = Read_inv();
-	    for(i = 1;i <= Inv_cnt;i++)
-	    {
-		    if(item[i].barcode == Inv_Barcode)
-		    {
-			    Inv_No = i;
-                transaction[Trn_cnt + 1].barcode = Inv_Barcode;
-			    Found = 1;
-		    }
-	    }
-	    if(Found == 1)
-	    {
-            printf("Item:%s\nPrice:%0.2f\nRemaining Quantity:%d\n",item[Inv_No].product, item[Inv_No].price, Stockcount(Inv_Barcode));
-            printf("How many do you want:");
-            fgets(tempstr, 3, stdin);
-            transaction[Trn_cnt + 1].qty = atoi(tempstr);
-            printf("Total Price:%0.2f\n",item[Inv_No].price * (float)transaction[Trn_cnt + 1].qty);
-            transaction[Trn_cnt + 1].price = item[Inv_No].price;
-            Complete_Trn(0);
-            printf("Continue(y/n):");
-            Continue = getchar();
-            fflush(stdin);
-	    }
-        else
+        Trn_cnt = Read_Trn();
+        printf("Hello %s, id:%d\n", User[User_ID].Name, User[User_ID].id);
+        do
         {
-            printf("Item not found\n");
-            printf("Continue(y/n):");
-            Continue = getchar();
-            fflush(stdin);
-        }
-    } while(Continue == 'y');
+            transaction[Trn_cnt + 1].id = User[User_ID].id;
+            printf("---------------------------------------------------\n");
+            printf("Item's Barcode:");
+            fgets(tempstr, 15, stdin);
+            Inv_Barcode = atoi(tempstr);
+            Inv_cnt = Read_inv();
+            for(i = 1;i <= Inv_cnt;i++)
+            {
+                if(item[i].barcode == Inv_Barcode)
+                {
+                    Inv_No = i;
+                    transaction[Trn_cnt + 1].barcode = Inv_Barcode;
+                    Found = 1;
+                }
+            }
+            if(Found == 1)
+            {
+                printf("Item:%s\nPrice:%0.2f\nRemaining Quantity:%d\n",item[Inv_No].product, item[Inv_No].price, Stockcount(Inv_Barcode));
+                printf("How many do you want:");
+                fgets(tempstr, 3, stdin);
+                transaction[Trn_cnt + 1].qty = atoi(tempstr);
+                printf("Total Price:%0.2f\n",item[Inv_No].price * (float)transaction[Trn_cnt + 1].qty);
+                transaction[Trn_cnt + 1].price = item[Inv_No].price;
+                Complete_Trn(0);
+                printf("Continue(y/n):");
+                Continue = getchar();
+                fflush(stdin);
+            }
+            else
+            {
+                printf("Item not found\n");
+                printf("Continue(y/n):");
+                Continue = getchar();
+                fflush(stdin);
+            }
+        } while(Continue == 'y');
+    }
 }
 int Stockcount(int Inv_Barcode)
 {
@@ -223,33 +235,38 @@ void Search_inv()
         } while (Continue == 'y');
     }
 }
-/*
+
 void Hot_item()
 {
     Inv_cnt = Read_inv();
     Trn_cnt = Read_Trn();
-    int Sold_qty[Inv_cnt], item_barcode[Inv_cnt], Sold_item_Cnt = 0, Hot[Inv_cnt], pass, last;
+    int Sold_qty[Inv_cnt], item_barcode[Inv_cnt], Sold_item_Cnt = 0, Hot[Inv_cnt], pass, last, l;
     Read_User();
-    for(i = 1;i <= Trn_cnt;i++)
+    for(l = 1;l <= Trn_cnt;l++)
     {
-        sprintf(tempstr, "%d", transaction[i].id);
-        if(transaction[i].qty < 0 && Check_User(tempstr, 0) == 1)
+        sprintf(tempstr, "%d", transaction[l].id);
+        printf("%d\n",transaction[l].id);
+        printf("%d\n",Check_User(tempstr, 0));
+        /*if(transaction[l].qty > 0 && Check_User(tempstr, 0) == 1)
         {
-            printf("%d",i);
             k = 1;
-            while(k != 1 && transaction[i].id != item_barcode[k])
+            if(Sold_item_Cnt == 0)
+            {
+                item_barcode[k] = transaction[l].id;
+                Sold_qty[k] = abs(transaction[l].qty);
+                Sold_item_Cnt++;
+            }
+            while(transaction[l].id != item_barcode[k])
             {
                 k++;
-                printf("%d",k);
                 if(Sold_item_Cnt < k)
                 {
                     Sold_item_Cnt = k;
                 }
             }
-            item_barcode[k] = transaction[i].barcode;
-            Sold_qty[k] += abs(transaction[i].qty);
-        }
-        printf("%d",k);
+            item_barcode[k] = transaction[l].barcode;
+            Sold_qty[k] += abs(transaction[l].qty);
+        }*/
     }
     for(pass = 2;pass <= Sold_item_Cnt;pass++)
     {
@@ -276,7 +293,7 @@ void Hot_item()
             }
         }
     }
-}*/
+}
 void start_admin()
 {
     int Access = 0;
@@ -408,7 +425,7 @@ int Authentication()
 }
 int Check_User(char Input[30], int Admin)
 {
-    Input[strlen(Input) - 1] = '\0';
+    Read_User();
     for(i = 1;i <= Cnt;i++)
     {
         if(strcmp(User[i].Role, "teacher") == 0 && Admin == 1)

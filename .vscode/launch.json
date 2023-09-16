@@ -1,9 +1,8 @@
 {
     "version": "0.2.0",
-    "configurations": 
-    [
+    "configurations": [
         {
-            "name": "C/C++: gcc build and debug active file",
+            "name": "C/C++: clang build and debug active file",
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
@@ -11,10 +10,9 @@
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "preLaunchTask": "C/C++: gcc build active file",
-            "targetArchitecture": "x86_64",
-        },
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "C/C++: clang build active file"
+        }
     ]
 }
