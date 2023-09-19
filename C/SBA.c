@@ -73,6 +73,7 @@ int main()
 		fgets(tempstr, 2, stdin);
         tempstr[strlen(tempstr)] = '\0';
         fflush(stdin);
+        printf("\e[1;1H\e[2J");
         if(strcmp(tempstr, "1") == 0)
         {
 			SalesSystem();
@@ -98,6 +99,7 @@ void SalesSystem()
         printf("---------------------------------------------------\n");
 		printf("Name/Id:");
 		fgets(Input, 30, stdin);
+        printf("\e[1;1H\e[2J");
         if(Check_User(Input, 0) != 1)
         {
             if(Check_User(Input, 1) != 1)
@@ -106,6 +108,7 @@ void SalesSystem()
                 printf("Continue(y/n):");
                 Continue = getchar();
                 fflush(stdin);
+                printf("\e[1;1H\e[2J");
             }
             else
             {
@@ -152,6 +155,7 @@ void SalesSystem()
                 printf("Continue(y/n):");
                 Continue = getchar();
                 fflush(stdin);
+                printf("\e[1;1H\e[2J");
             }
             else
             {
@@ -159,6 +163,7 @@ void SalesSystem()
                 printf("Continue(y/n):");
                 Continue = getchar();
                 fflush(stdin);
+                printf("\e[1;1H\e[2J");
             }
         } while(Continue == 'y');
     }
@@ -180,10 +185,11 @@ void Search_inv()
 	char Continue, Search[50];
 	int Found[Inv_cnt + 1], l, Flag, Mode;
     printf("---------------------------------------------------\n");
-    printf("Search for Hot item or price of an item?(1/2)");
+    printf("Search for Hot item or price of an item?(1/2):");
     fgets(tempstr, 2, stdin);
     tempstr[strlen(tempstr)] = '\0';
     fflush(stdin);
+    printf("\e[1;1H\e[2J");
     if(strcmp(tempstr, "1") == 0)
     {
         printf("---------------------------------------------------\n");
@@ -234,7 +240,8 @@ void Search_inv()
             }
             printf("Continue?(y/n):");
             Continue = getchar();
-                fflush(stdin);
+            fflush(stdin);
+            printf("\e[1;1H\e[2J");
         } while (Continue == 'y');
     }
 }
@@ -317,7 +324,6 @@ void start_admin()
 {
     int Access = 0;
     char tempstr[99];
-	
     char Continue;
 	do
     {
@@ -342,6 +348,7 @@ void start_admin()
 		    fgets(tempstr, 2, stdin);
             tempstr[strlen(tempstr)] = '\0';
             fflush(stdin);
+            printf("\e[H\e[2J\e[3J");
 		    if(strcmp(tempstr,"1") == 0)
             {
                 printf("---------------------------------------------------\n");
@@ -388,6 +395,7 @@ void start_admin()
             printf("Continue?(y/n):");
             Continue = getchar();
             fflush(stdin);
+            printf("\e[1;1H\e[2J");
             if(Continue == 'n')
             {
                 strcpy(tempstr, "9");
@@ -429,11 +437,12 @@ int Authentication()
         Input[i] = '\0';
         if(strcmp(Input, Password) == 0)
         {
-            
+            printf("\e[1;1H\e[2J");
             return 1;
         }
         else
         {
+            printf("\e[1;1H\e[2J");
             return 0;
         }
     }
@@ -653,9 +662,10 @@ void New_inv()
         fgets(tempstr, 15, stdin);
         item[Inv_cnt + 1].barcode = atoi(tempstr);
         Inv_cnt++;
-        printf("Continue?(y/n)");
+        printf("Continue?(y/n):");
         Continue = getchar();
-            fflush(stdin);
+        fflush(stdin);
+        printf("\e[1;1H\e[2J");
     } while(Continue == 'y');
     Write_Inv();
 }
@@ -697,6 +707,7 @@ void Edit_inv()
                 fgets(tempstr, 30, stdin);
                 tempstr[strlen(tempstr) - 1] = '\0';
                 strcpy(item[Inv_No].category, tempstr);
+                printf("\e[H\e[2J\e[3J");
                 Write_Inv();
             }
             else if(strcmp(tempstr, "Brand") == 0 || strcmp(tempstr, "brand") == 0)
@@ -705,6 +716,7 @@ void Edit_inv()
                 fgets(tempstr, 30, stdin);
                 tempstr[strlen(tempstr) - 1] = '\0';
                 strcpy(item[Inv_No].brand, tempstr);
+                printf("\e[H\e[2J\e[3J");
                 Write_Inv();
             }
             else if(strcmp(tempstr, "Product") == 0 || strcmp(tempstr, "product") == 0)
@@ -713,6 +725,7 @@ void Edit_inv()
                 fgets(tempstr, 50, stdin);
                 tempstr[strlen(tempstr) - 1] = '\0';
                 strcpy(item[Inv_No].product, tempstr);
+                printf("\e[H\e[2J\e[3J");
                 Write_Inv();
             }
             else if(strcmp(tempstr, "Price") == 0 || strcmp(tempstr, "price") == 0)
@@ -720,6 +733,7 @@ void Edit_inv()
                 printf("New Price:");
                 fgets(tempstr, 50, stdin);
                 item[Inv_No].price = atof(tempstr);
+                printf("\e[H\e[2J\e[3J");
                 Write_Inv();
             }
             else if(strcmp(tempstr, "Barcode") == 0 || strcmp(tempstr, "barcode") == 0)
@@ -727,16 +741,23 @@ void Edit_inv()
                 printf("New Barcode:");
                 fgets(tempstr, 50, stdin);
                 item[Inv_No].barcode = atoi(tempstr);
+                printf("\e[H\e[2J\e[3J");
                 Write_Inv();
+                
             }
             else
             {
                 printf("Invalid Input\n");
             }
         }
+        else
+        {
+            printf("Invalid Input\n");
+        }
         printf("Continue?(y/n):");
         Continue = getchar();
-            fflush(stdin);
+        fflush(stdin);
+        printf("\e[H\e[2J\e[3J");
     } while(Continue == 'y');
 }
 void Update_Inv()
@@ -759,6 +780,7 @@ void Update_Inv()
         printf("Add/Decrease(A/D):");
         fgets(tempstr, 2, stdin);
         fflush(stdin);
+        printf("\e[1;1H\e[2J");
         if((Flag = strcmp(tempstr, "A")) == 0)
         {
             Complete_Trn(1);
