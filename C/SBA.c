@@ -195,7 +195,7 @@ void Search_inv()
         printf("---------------------------------------------------\n");
         Hot_item();
     }
-    if(strcmp(tempstr, "2") == 0)
+    else if(strcmp(tempstr, "2") == 0)
     {
         do
         {
@@ -234,7 +234,7 @@ void Search_inv()
                 printf("Result:\n");
                 for(i = 0;i < l;i++)
                 {
-                    printf("%d.Product name:%s\n", i + 1, item[Found[i]].product);
+                    printf("%d.Product name:%s\n  Barcode:%d\n", i + 1, item[Found[i]].product, item[Found[i]].barcode);
                     printf("  Price:%0.1f\n", item[Found[i]].price);
                 }
             }
@@ -243,6 +243,10 @@ void Search_inv()
             fflush(stdin);
             printf("\e[1;1H\e[2J");
         } while (Continue == 'y');
+    }
+    else
+    {
+        printf("Invalid Input\n");
     }
 }
 void Hot_item()
@@ -443,11 +447,13 @@ int Authentication()
         else
         {
             printf("\e[1;1H\e[2J");
+            printf("Incorrect Input\n");
             return 0;
         }
     }
     else
     {
+        printf("Incorrect Input\n");
         return 0;
     }
 }
