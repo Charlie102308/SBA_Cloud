@@ -2,8 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#if defined(__APPLE__) || defined(__MACH__) || defined(__linux__)
 #include <termios.h>
 #include <unistd.h>
+#elif defined(_WIN64) || defined(_WIN32)
+#include <window.h>
+#endif
 struct itemType
 {
     char category[30];
@@ -36,7 +40,9 @@ FILE *fp;
 int Inv_cnt = 0, Trn_cnt = 0, Cnt = 0, i, k, User_ID;
 char tempstr[1000];
 char Password[12] = "StmcPos1983";
+#if defined(__APPLE__) || defined(__MACH__) || defined(__linux__)
 int getch();
+#endif
 void Search_inv();
 void Hot_item();
 int Read_inv();
@@ -853,6 +859,7 @@ int Read_Trn()
     return Cnt - 1;
 }
 void Print_Trn()
+
 {
     for(i = 1;i <= Trn_cnt;i++)
     {
@@ -861,8 +868,10 @@ void Print_Trn()
 }
 int getch() 
 {
+   
     int ch;
     // struct to hold the terminal settings
+    #if defined(__APPLE__) || defined(__MACH__) || defined(__linux__)
     struct termios old_settings, new_settings;
     // take default setting in old_settings
     tcgetattr(STDIN_FILENO, &old_settings);
@@ -877,5 +886,13 @@ int getch()
     ch = getchar();
     // reset back to default settings
     tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
+    #elif defined(_WIN64) || defined(_WIN32)
+    HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); 
+    DWORD mode = 0;
+    GetConsoleMode(hStdin, &mode);
+    SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
+    ch = getchar();
+    SetConsoleMode(hStdin, mode);
+    #endif
     return ch;
 }
