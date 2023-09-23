@@ -40,9 +40,6 @@ FILE *fp;
 int Inv_cnt = 0, Trn_cnt = 0, Cnt = 0, i, k, User_ID;
 char tempstr[1000];
 char Password[12] = "StmcPos1983";
-#if defined(__APPLE__) || defined(__MACH__) || defined(__linux__)
-int getch();
-#endif
 void Search_inv();
 void Hot_item();
 int Read_inv();
@@ -53,6 +50,7 @@ void Write_Inv();
 void Edit_inv();
 void Update_Inv();
 
+void Summary();
 int Read_Trn();
 void Print_Trn();
 void Complete_Trn(int);
@@ -61,6 +59,7 @@ void Read_User();
 int Check_User(char[30], int);
 void start_admin();
 int Authentication();
+int getch();
 
 void SalesSystem();
 int Stockcount(int);
@@ -114,7 +113,7 @@ void SalesSystem()
         printf("-------------------------------------------------------------------\n");
 		printf("Name/Id:");
 		fgets(Input, 30, stdin);
-        printf("\e[1;1H\e[2J");
+        printf("\e[H\e[2J\e[3J");
         if(Check_User(Input, 0) != 1)
         {
             if(Check_User(Input, 1) != 1)
@@ -123,7 +122,7 @@ void SalesSystem()
                 printf("Continue(y/n):");
                 Continue = getchar();
                 fflush(stdin);
-                printf("\e[1;1H\e[2J");
+                printf("\e[H\e[2J\e[3J");
             }
             else
             {
@@ -170,7 +169,7 @@ void SalesSystem()
                 printf("Continue(y/n):");
                 Continue = getchar();
                 fflush(stdin);
-                printf("\e[1;1H\e[2J");
+                printf("\e[H\e[2J\e[3J");
             }
             else
             {
@@ -178,7 +177,7 @@ void SalesSystem()
                 printf("Continue(y/n):");
                 Continue = getchar();
                 fflush(stdin);
-                printf("\e[1;1H\e[2J");
+                printf("\e[H\e[2J\e[3J");
             }
         } while(Continue == 'y');
     }
@@ -204,7 +203,7 @@ void Search_inv()
     fgets(tempstr, 2, stdin);
     tempstr[strlen(tempstr)] = '\0';
     fflush(stdin);
-    printf("\e[1;1H\e[2J");
+    printf("\e[H\e[2J\e[3J");
     if(strcmp(tempstr, "1") == 0)
     {
         printf("-------------------------------------------------------------------\n");
@@ -256,7 +255,7 @@ void Search_inv()
             printf("Continue?(y/n):");
             Continue = getchar();
             fflush(stdin);
-            printf("\e[1;1H\e[2J");
+            printf("\e[H\e[2J\e[3J");
         } while (Continue == 'y');
     }
     else
@@ -361,7 +360,8 @@ void start_admin()
             printf("4. Add New Inventory\n");
             printf("5. Edit Inventory\n");
             printf("6. Update Inventory\n");
-		    printf("7. Transaction LIST\n");
+            printf("7. Summary of the month\n");
+            printf("8. Transaction LIST\n");
 		    printf("9. Quit\n");
 		    printf("Select a function: ");
 		    fgets(tempstr, 2, stdin);
@@ -402,7 +402,12 @@ void start_admin()
                 printf("-------------------------------------------------------------------\n");
                 Update_Inv();
             }
-            else if(strcmp(tempstr,"7") == 0)
+            else if(strcmp(tempstr, "7") == 0)
+            {
+                printf("-------------------------------------------------------------------\n");
+                Summary();
+            }
+            else if(strcmp(tempstr,"8") == 0)
             {
                 printf("-------------------------------------------------------------------\n");
                 Trn_cnt = Read_Trn();
@@ -414,7 +419,7 @@ void start_admin()
             printf("Continue?(y/n):");
             Continue = getchar();
             fflush(stdin);
-            printf("\e[1;1H\e[2J");
+            printf("\e[H\e[2J\e[3J");
             if(Continue == 'n')
             {
                 strcpy(tempstr, "9");
@@ -456,12 +461,12 @@ int Authentication()
         Input[i] = '\0';
         if(strcmp(Input, Password) == 0)
         {
-            printf("\e[1;1H\e[2J");
+            printf("\e[H\e[2J\e[3J");
             return 1;
         }
         else
         {
-            printf("\e[1;1H\e[2J");
+            printf("\e[H\e[2J\e[3J");
             printf("Incorrect Input\n");
             return 0;
         }
@@ -471,6 +476,36 @@ int Authentication()
         printf("Incorrect Input\n");
         return 0;
     }
+}
+int getch() 
+{
+   
+    int ch;
+    // struct to hold the terminal settings
+    #if defined(__APPLE__) || defined(__MACH__) || defined(__linux__)
+    struct termios old_settings, new_settings;
+    // take default setting in old_settings
+    tcgetattr(STDIN_FILENO, &old_settings);
+    // make of copy of it
+    new_settings = old_settings;
+    // change the settings for by disabling ECHO mode
+    // read man page of termios.h for more settings info
+    new_settings.c_lflag &= ~(ICANON | ECHO);
+    // apply these new settings
+    tcsetattr(STDIN_FILENO, TCSANOW, &new_settings);
+    // now take the input in this mode
+    ch = getchar();
+    // reset back to default settings
+    tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
+    #elif defined(_WIN64) || defined(_WIN32)
+    HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); 
+    DWORD mode = 0;
+    GetConsoleMode(hStdin, &mode);
+    SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
+    ch = getchar();
+    SetConsoleMode(hStdin, mode);
+    #endif
+    return ch;
 }
 int Check_User(char Input[30], int Admin)
 {
@@ -686,7 +721,7 @@ void New_inv()
         printf("Continue?(y/n):");
         Continue = getchar();
         fflush(stdin);
-        printf("\e[1;1H\e[2J");
+        printf("\e[H\e[2J\e[3J");
     } while(Continue == 'y');
     Write_Inv();
 }
@@ -801,7 +836,7 @@ void Update_Inv()
         printf("Add/Decrease(A/D):");
         fgets(tempstr, 2, stdin);
         fflush(stdin);
-        printf("\e[1;1H\e[2J");
+        printf("\e[H\e[2J\e[3J");
         if((Flag = strcmp(tempstr, "A")) == 0)
         {
             Complete_Trn(1);
@@ -843,6 +878,19 @@ void Complete_Trn(int Positive)
     fclose(fp);
     printf("Transaction Complete!\n\n");
 }
+void Summary()
+{
+    int Temp_ID = User_ID;
+    Inv_cnt = Read_inv();
+    Trn_cnt = Read_Trn();
+    printf("Summary Of The Month:\n");
+    for(k = 1;k <= Inv_cnt;k++)
+    {
+        printf("%d.%s Remaining:%d\n", k, item[k].product, Stockcount(item[k].barcode));
+    }
+    Hot_item();
+    User_ID = Temp_ID;
+}
 int Read_Trn()
 {
     fp = fopen("c:\\transaction.txt", "r");
@@ -874,34 +922,4 @@ void Print_Trn()
     {
         printf("%d.Date:%s\nTimes:%s\nId:%d\nPrice:%0.2f\nQuantity:%d\nBarcode:%d\n\n", i, transaction[i].td, transaction[i].tt, transaction[i].id, transaction[i].price, transaction[i].qty, transaction[i].barcode);
     }
-}
-int getch() 
-{
-   
-    int ch;
-    // struct to hold the terminal settings
-    #if defined(__APPLE__) || defined(__MACH__) || defined(__linux__)
-    struct termios old_settings, new_settings;
-    // take default setting in old_settings
-    tcgetattr(STDIN_FILENO, &old_settings);
-    // make of copy of it
-    new_settings = old_settings;
-    // change the settings for by disabling ECHO mode
-    // read man page of termios.h for more settings info
-    new_settings.c_lflag &= ~(ICANON | ECHO);
-    // apply these new settings
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_settings);
-    // now take the input in this mode
-    ch = getchar();
-    // reset back to default settings
-    tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
-    #elif defined(_WIN64) || defined(_WIN32)
-    HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); 
-    DWORD mode = 0;
-    GetConsoleMode(hStdin, &mode);
-    SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
-    ch = getchar();
-    SetConsoleMode(hStdin, mode);
-    #endif
-    return ch;
 }
