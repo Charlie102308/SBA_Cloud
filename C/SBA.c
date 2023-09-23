@@ -69,7 +69,16 @@ int main()
 {
     do
     {
-        printf("---------------------------------------------------\n");
+        printf("-------------------------------------------------------------------\n");
+        printf(" ________   ___  ___          ________   ________   ________  \n");      
+        printf("|\\   ____\\ |\\  \\|\\  \\        |\\   __  \\ |\\   __  \\ |\\   ____\\ \n");    
+        printf("\\ \\  \\___|_\\ \\  \\\\\\  \\       \\ \\  \\|\\  \\\\ \\  \\|\\  \\\\ \\  \\___|_ \n");    
+        printf(" \\ \\_____  \\\\ \\  \\\\\\  \\       \\ \\   ____\\\\ \\  \\\\\\  \\\\ \\_____  \\ \n");  
+        printf("  \\|____|\\  \\\\ \\  \\\\\\  \\       \\ \\  \\___| \\ \\  \\\\\\  \\\\|____|\\  \\  \n"); 
+        printf("    ____\\_\\  \\\\ \\_______\\       \\ \\__\\     \\ \\_______\\ ____\\_\\  \\ \n"); 
+        printf("   |\\_________\\\\|_______|        \\|__|      \\|_______||\\_________\\ \n"); 
+        printf("   \\|_________|                                       \\|_________| \n");
+        printf("-------------------------------------------------------------------\n");
 		printf("Main Menu Name\n");
 		printf("1. Self Help Sale\n");
 		printf("2. Search an item\n");
@@ -79,7 +88,7 @@ int main()
 		fgets(tempstr, 2, stdin);
         tempstr[strlen(tempstr)] = '\0';
         fflush(stdin);
-        printf("\e[1;1H\e[2J");
+        printf("\e[H\e[2J\e[3J");
         if(strcmp(tempstr, "1") == 0)
         {
 			SalesSystem();
@@ -102,7 +111,7 @@ void SalesSystem()
 	char Input[30], Continue = 'n';
 	do
     {
-        printf("---------------------------------------------------\n");
+        printf("-------------------------------------------------------------------\n");
 		printf("Name/Id:");
 		fgets(Input, 30, stdin);
         printf("\e[1;1H\e[2J");
@@ -135,7 +144,7 @@ void SalesSystem()
         do
         {
             transaction[Trn_cnt + 1].id = User[User_ID].id;
-            printf("---------------------------------------------------\n");
+            printf("-------------------------------------------------------------------\n");
             printf("Item's Barcode:");
             fgets(tempstr, 15, stdin);
             Inv_Barcode = atoi(tempstr);
@@ -190,7 +199,7 @@ void Search_inv()
 {
 	char Continue, Search[50];
 	int Found[Inv_cnt + 1], l, Flag, Mode;
-    printf("---------------------------------------------------\n");
+    printf("-------------------------------------------------------------------\n");
     printf("Search for Hot item or price of an item?(1/2):");
     fgets(tempstr, 2, stdin);
     tempstr[strlen(tempstr)] = '\0';
@@ -198,7 +207,7 @@ void Search_inv()
     printf("\e[1;1H\e[2J");
     if(strcmp(tempstr, "1") == 0)
     {
-        printf("---------------------------------------------------\n");
+        printf("-------------------------------------------------------------------\n");
         Hot_item();
     }
     else if(strcmp(tempstr, "2") == 0)
@@ -210,7 +219,7 @@ void Search_inv()
             {
                 Found[i] = 0;
             }
-            printf("---------------------------------------------------\n");
+            printf("-------------------------------------------------------------------\n");
             printf("What item do you want to search:");
             fgets(Search, 50, stdin);
             Search[strlen(Search) - 1] = '\0';
@@ -343,7 +352,7 @@ void start_admin()
         }
         if(Access == 1)
         {
-            printf("---------------------------------------------------\n");
+            printf("-------------------------------------------------------------------\n");
 			printf("Hello %s, id:%d\n", User[User_ID].Name, User[User_ID].id);
 		    printf("Sub Menu Name\n");
 		    printf("1. Inventory LIST\n");
@@ -361,41 +370,41 @@ void start_admin()
             printf("\e[H\e[2J\e[3J");
 		    if(strcmp(tempstr,"1") == 0)
             {
-                printf("---------------------------------------------------\n");
+                printf("-------------------------------------------------------------------\n");
 			    Inv_cnt = Read_inv();
 			    Print_inv();
             }
             else if(strcmp(tempstr,"2") == 0)
             {
-                printf("---------------------------------------------------\n");
+                printf("-------------------------------------------------------------------\n");
                 Inv_cnt = Read_inv();
                 Print_inv_in_order(item, 1);
             }
             else if(strcmp(tempstr,"3") == 0)
             {
-                printf("---------------------------------------------------\n");
+                printf("-------------------------------------------------------------------\n");
                 Inv_cnt = Read_inv();
                 Print_inv_in_order(item, 0);
             }
             else if(strcmp(tempstr,"4") == 0)
             {
-                printf("---------------------------------------------------\n");
+                printf("-------------------------------------------------------------------\n");
                 Inv_cnt = Read_inv();
                 New_inv();
             }
             else if(strcmp(tempstr,"5") == 0)
             {
-                printf("---------------------------------------------------\n");
+                printf("-------------------------------------------------------------------\n");
                 Edit_inv();
             }
             else if(strcmp(tempstr, "6") == 0)
             {
-                printf("---------------------------------------------------\n");
+                printf("-------------------------------------------------------------------\n");
                 Update_Inv();
             }
             else if(strcmp(tempstr,"7") == 0)
             {
-                printf("---------------------------------------------------\n");
+                printf("-------------------------------------------------------------------\n");
                 Trn_cnt = Read_Trn();
                 Print_Trn();
             }
@@ -418,7 +427,7 @@ int Authentication()
 {
     char Input[31];
     int ch;
-    printf("---------------------------------------------------\n");
+    printf("-------------------------------------------------------------------\n");
     printf("Name/Id:");
     fgets(Input, 30, stdin);
     Read_User();
@@ -538,7 +547,7 @@ void Print_inv()
 {
     for(i = 1;i <= Inv_cnt;i++)
     {
-        printf("%d Category:%s\nBrand:%s\nProduct:%s\nPrice:$%0.2f\nBarcode:%d\n\n", i, item[i].category, item[i].brand, item[i].product, item[i].price, item[i].barcode);
+        printf("%d.Category:%s\nBrand:%s\nProduct:%s\nPrice:$%0.2f\nBarcode:%d\n\n", i, item[i].category, item[i].brand, item[i].product, item[i].price, item[i].barcode);
     }
 }
 void Print_inv_in_order(struct itemType tempitem[], int sort)
@@ -650,7 +659,7 @@ void Print_inv_in_order(struct itemType tempitem[], int sort)
     }
 	for(i = 1;i <= Inv_cnt;i++)
     {
-        printf("%d Category:%s\nBrand:%s\nProduct:%s\nPrice:$%0.2f\nBarcode:%d\n\n", i, tempitem[i].category, tempitem[i].brand, tempitem[i].product, tempitem[i].price, tempitem[i].barcode);
+        printf("%d.Category:%s\nBrand:%s\nProduct:%s\nPrice:$%0.2f\nBarcode:%d\n\n", i, tempitem[i].category, tempitem[i].brand, tempitem[i].product, tempitem[i].price, tempitem[i].barcode);
     }
 }
 void New_inv()
@@ -863,7 +872,7 @@ void Print_Trn()
 {
     for(i = 1;i <= Trn_cnt;i++)
     {
-        printf("%d Date:%s\nTimes:%s\nId:%d\nPrice:%0.2f\nQuantity:%d\nBarcode:%d\n\n", i, transaction[i].td, transaction[i].tt, transaction[i].id, transaction[i].price, transaction[i].qty, transaction[i].barcode);
+        printf("%d.Date:%s\nTimes:%s\nId:%d\nPrice:%0.2f\nQuantity:%d\nBarcode:%d\n\n", i, transaction[i].td, transaction[i].tt, transaction[i].id, transaction[i].price, transaction[i].qty, transaction[i].barcode);
     }
 }
 int getch() 
