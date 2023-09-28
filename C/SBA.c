@@ -2,12 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#if defined(__APPLE__) || defined(__MACH__) || defined(__linux__)
 #include <termios.h>
 #include <unistd.h>
-#elif defined(_WIN64) || defined(_WIN32)
-#include <window.h>
-#endif
 struct itemType
 {
     char category[30];
@@ -219,7 +215,7 @@ void Search_inv()
                 Found[i] = 0;
             }
             printf("-------------------------------------------------------------------\n");
-            printf("What item do you want to search:");
+            printf("What item do you want to search(Product Name):");
             fgets(Search, 50, stdin);
             Search[strlen(Search) - 1] = '\0';
             for(i = 1;i <= Inv_cnt;i++)
@@ -479,10 +475,8 @@ int Authentication()
 }
 int getch() 
 {
-   
     int ch;
     // struct to hold the terminal settings
-    #if defined(__APPLE__) || defined(__MACH__) || defined(__linux__)
     struct termios old_settings, new_settings;
     // take default setting in old_settings
     tcgetattr(STDIN_FILENO, &old_settings);
@@ -497,14 +491,6 @@ int getch()
     ch = getchar();
     // reset back to default settings
     tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
-    #elif defined(_WIN64) || defined(_WIN32)
-    HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); 
-    DWORD mode = 0;
-    GetConsoleMode(hStdin, &mode);
-    SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
-    ch = getchar();
-    SetConsoleMode(hStdin, mode);
-    #endif
     return ch;
 }
 int Check_User(char Input[30], int Admin)
