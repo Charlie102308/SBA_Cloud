@@ -62,6 +62,7 @@ int Stockcount(int);
 
 int main()
 {
+    printf("\e[H\e[2J\e[3J");
     do
     {
         printf("-------------------------------------------------------------------\n");
@@ -131,14 +132,13 @@ void SalesSystem()
             flag = 1;
             Continue = 'n';
         }
-	} while (Continue == 'y');
+	} while (Continue == 'y' || Continue == 'Y');
     if(flag == 1)
     {
         Trn_cnt = Read_Trn();
-        printf("Hello %s, id:%d\n", User[User_ID].Name, User[User_ID].id);
         do
         {
-            transaction[Trn_cnt + 1].id = User[User_ID].id;
+            printf("Hello %s, id:%d\n", User[User_ID].Name, User[User_ID].id);
             printf("-------------------------------------------------------------------\n");
             printf("Item's Barcode:");
             fgets(tempstr, 15, stdin);
@@ -146,8 +146,9 @@ void SalesSystem()
             Inv_cnt = Read_inv();
             for(i = 1;i <= Inv_cnt;i++)
             {
-                if(item[i].barcode == Inv_Barcode)
+                if(item[i].barcode == Inv_Barcode && Inv_Barcode != 0)
                 {
+                    transaction[Trn_cnt + 1].id = User[User_ID].id;
                     Inv_No = i;
                     transaction[Trn_cnt + 1].barcode = Inv_Barcode;
                     Found = 1;
@@ -156,12 +157,14 @@ void SalesSystem()
             if(Found == 1)
             {
                 printf("Item:%s\nPrice:%0.2f\nRemaining Quantity:%d\n",item[Inv_No].product, item[Inv_No].price, Stockcount(Inv_Barcode));
+                printf("-------------------------------------------------------------------\n");
                 printf("How many do you want:");
                 fgets(tempstr, 3, stdin);
                 transaction[Trn_cnt + 1].qty = atoi(tempstr);
                 printf("Total Price:%0.2f\n",item[Inv_No].price * (float)transaction[Trn_cnt + 1].qty);
                 transaction[Trn_cnt + 1].price = item[Inv_No].price;
                 Complete_Trn(0);
+                printf("-------------------------------------------------------------------\n");
                 printf("Continue(y/n):");
                 Continue = getchar();
                 fflush(stdin);
@@ -175,7 +178,7 @@ void SalesSystem()
                 fflush(stdin);
                 printf("\e[H\e[2J\e[3J");
             }
-        } while(Continue == 'y');
+        } while (Continue == 'y' || Continue == 'Y');
     }
 }
 int Stockcount(int Inv_Barcode)
@@ -241,6 +244,7 @@ void Search_inv()
             }
             else
             {
+                printf("-------------------------------------------------------------------\n");
                 printf("Result:\n");
                 for(i = 0;i < l;i++)
                 {
@@ -248,11 +252,12 @@ void Search_inv()
                     printf("  Price:%0.1f\n", item[Found[i]].price);
                 }
             }
+            printf("-------------------------------------------------------------------\n\n");
             printf("Continue?(y/n):");
             Continue = getchar();
             fflush(stdin);
             printf("\e[H\e[2J\e[3J");
-        } while (Continue == 'y');
+        } while (Continue == 'y' || Continue == 'Y');
     }
     else
     {
@@ -329,10 +334,11 @@ void Hot_item()
         {
             if(item_barcode[k] == item[i].barcode)
             {
-                printf("%d. %s\t %d Sold\n",k , item[i].product, Sold_qty[k]);
+                printf("%d. %-30s\t %2d Sold\n",k , item[i].product, Sold_qty[k]);
             }
         }
     }
+    printf("-------------------------------------------------------------------\n");
 }
 void start_admin()
 {
@@ -349,6 +355,7 @@ void start_admin()
         {
             printf("-------------------------------------------------------------------\n");
 			printf("Hello %s, id:%d\n", User[User_ID].Name, User[User_ID].id);
+            printf("-------------------------------------------------------------------\n");
 		    printf("Sub Menu Name\n");
 		    printf("1. Inventory LIST\n");
             printf("2. Inventory LIST(Category with sorting)\n");
@@ -384,13 +391,11 @@ void start_admin()
             }
             else if(strcmp(tempstr,"4") == 0)
             {
-                printf("-------------------------------------------------------------------\n");
                 Inv_cnt = Read_inv();
                 New_inv();
             }
             else if(strcmp(tempstr,"5") == 0)
             {
-                printf("-------------------------------------------------------------------\n");
                 Edit_inv();
             }
             else if(strcmp(tempstr, "6") == 0)
@@ -416,13 +421,13 @@ void start_admin()
             Continue = getchar();
             fflush(stdin);
             printf("\e[H\e[2J\e[3J");
-            if(Continue == 'n')
+            if(Continue != 'y' && Continue != 'Y')
             {
                 strcpy(tempstr, "9");
             }
             
         }
-    } while(strcmp(tempstr,"9") != 0);
+    } while(strcmp(tempstr, "9") != 0);
 }
 int Authentication()
 {
@@ -688,6 +693,7 @@ void New_inv()
     char Continue;
     do
     {
+        printf("-------------------------------------------------------------------\n");
         printf("Item's Category(Max15):");
         fgets(item[Inv_cnt + 1].category, 15, stdin);
         item[Inv_cnt + 1].category[strlen(item[Inv_cnt + 1].category) - 1] = '\0';
@@ -704,11 +710,12 @@ void New_inv()
         fgets(tempstr, 15, stdin);
         item[Inv_cnt + 1].barcode = atoi(tempstr);
         Inv_cnt++;
+        printf("-------------------------------------------------------------------\n");
         printf("Continue?(y/n):");
         Continue = getchar();
         fflush(stdin);
         printf("\e[H\e[2J\e[3J");
-    } while(Continue == 'y');
+    } while(Continue == 'y' || Continue == 'Y');
     Write_Inv();
 }
 void Write_Inv()
@@ -725,7 +732,9 @@ void Write_Inv()
     }
     fclose(fp);
     printf("New Inventory\n");
+    printf("-------------------------------------------------------------------\n");
     Print_inv();
+    printf("-------------------------------------------------------------------\n");
 }
 void Edit_inv()
 {
@@ -733,12 +742,13 @@ void Edit_inv()
     int Inv_No;
     do
     {
+        printf("-------------------------------------------------------------------\n");
         Inv_cnt = Read_inv();
         Print_inv();
         printf("Which Inventory do you want to change(No.):");
         fgets(tempstr, 5, stdin);
         Inv_No = atoi(tempstr);
-        if(Inv_No <= Inv_cnt)
+        if(Inv_No <= Inv_cnt && Inv_No >= 1)
         {
             printf("Which part you want to change:(Category/Brand/Product/Price/Barcode):");
             fgets(tempstr, 15, stdin);
@@ -800,7 +810,7 @@ void Edit_inv()
         Continue = getchar();
         fflush(stdin);
         printf("\e[H\e[2J\e[3J");
-    } while(Continue == 'y');
+    } while(Continue == 'y' || Continue == 'Y');
 }
 void Update_Inv()
 {
@@ -870,10 +880,12 @@ void Summary()
     Inv_cnt = Read_inv();
     Trn_cnt = Read_Trn();
     printf("Summary Of The Month:\n");
+    printf("-------------------------------------------------------------------\n");
     for(k = 1;k <= Inv_cnt;k++)
     {
-        printf("%d.%s Remaining:%d\n", k, item[k].product, Stockcount(item[k].barcode));
+        printf("%d. %-38s Remaining:%d\n", k, item[k].product, Stockcount(item[k].barcode));
     }
+    printf("-------------------------------------------------------------------\n");
     Hot_item();
     User_ID = Temp_ID;
 }
