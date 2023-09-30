@@ -51,7 +51,7 @@ int Read_Trn();
 void Print_Trn();
 void Complete_Trn(int);
 
-void Read_User();
+int Read_User();
 int Check_User(char[30], int);
 void start_admin();
 int Authentication();
@@ -500,8 +500,9 @@ int getch()
 }
 int Check_User(char Input[30], int Admin)
 {
-    Read_User();
-    for(i = 1;i <= Cnt;i++)
+    int User_Cnt = 0;
+    User_Cnt = Read_User();
+    for(i = 1;i <= User_Cnt;i++)
     {
         if(strcmp(User[i].Role, "teacher") == 0 && Admin == 1)
         {
@@ -522,11 +523,17 @@ int Check_User(char Input[30], int Admin)
     }
     return 0;
 }
-void Read_User()
+int Read_User()
 {
-    fp = fopen("c:\\user.txt", "r");
+    fp = fopen("user.txt", "r");
     fgets(tempstr, 99, fp);
     Cnt = 0;
+    if(fp == NULL)
+    {
+        printf("Can't open or find User file\n");
+        printf("COntact Staff\n");
+        return 0;
+    }
     while(!feof(fp))
     {
         Cnt++;
@@ -538,12 +545,27 @@ void Read_User()
         User[Cnt].id = atoi(tempstr);
     }
     fclose(fp);
+    if(Cnt > 0)
+    {
+        return Cnt - 1;
+    }
+    else
+    {
+        printf("No User Found");
+        return 0;
+    }
 }
 int Read_inv()
 {
-    fp = fopen("c:\\inventory.txt", "r");
+    fp = fopen("inventory.txt", "r");
     fgets(tempstr, 99 ,fp);
     Cnt = 0;
+    if(fp == NULL)
+    {
+        printf("Can't open or find Inventory file\n");
+        printf("COntact Staff\n");
+        return 0;
+    }
     while(!feof(fp))
     {
         Cnt++;
@@ -891,9 +913,15 @@ void Summary()
 }
 int Read_Trn()
 {
-    fp = fopen("c:\\transaction.txt", "r");
+    fp = fopen("transaction.txt", "r");
     fgets(tempstr, 99, fp);
     Cnt = 0;
+    if(fp == NULL)
+    {
+        printf("Can't open or find transaction file\n");
+        printf("COntact Staff\n");
+        return 0;
+    }
     while(!feof(fp))
     {
         Cnt++;
@@ -911,7 +939,15 @@ int Read_Trn()
         transaction[Cnt].barcode = atoi(tempstr);
     }
     fclose(fp);
-    return Cnt - 1;
+    if(Cnt > 0)
+    {
+        return Cnt - 1;
+    }
+    else
+    {
+        printf("No Transaction Found");
+        return 0;
+    }
 }
 void Print_Trn()
 
