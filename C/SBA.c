@@ -35,15 +35,15 @@ FILE *fp;
 
 int Inv_cnt = 0, Trn_cnt = 0, Cnt = 0, i, k, User_ID;
 char tempstr[1000];
-char Password[12] = "StmcPos1983";
-void Search_inv();
-void Hot_item();
-int Read_inv();
-void Print_inv();
-void Print_inv_in_order(struct itemType item[], int);
-void New_inv();
+const char Password[12] = "StmcPos1983";
+void Search_Inv();
+void Hot_Item();
+int Read_Inv();
+void Print_Inv();
+void Print_Inv_in_order(struct itemType item[], int);
+void New_Inv();
 void Write_Inv();
-void Edit_inv();
+void Edit_Inv();
 void Update_Inv();
 
 void Summary();
@@ -91,8 +91,8 @@ int main()
         }
         else if(strcmp(tempstr, "2") == 0)
         {
-            Inv_cnt = Read_inv();
-			Search_inv();
+            Inv_cnt = Read_Inv();
+			Search_Inv();
 		}
         else if(strcmp(tempstr, "3") == 0)
         {
@@ -143,7 +143,7 @@ void SalesSystem()
             printf("Item's Barcode:");
             fgets(tempstr, 15, stdin);
             Inv_Barcode = atoi(tempstr);
-            Inv_cnt = Read_inv();
+            Inv_cnt = Read_Inv();
             for(i = 1;i <= Inv_cnt;i++)
             {
                 if(item[i].barcode == Inv_Barcode && Inv_Barcode != 0)
@@ -193,10 +193,10 @@ int Stockcount(int Inv_Barcode)
 	}
 	return Total_Stock;
 }
-void Search_inv()
+void Search_Inv()
 {
 	char Continue, Search[50];
-	int Found[Inv_cnt + 1], l, Flag, Mode;
+	int Found[Inv_cnt + 1], l, Flag;
     printf("-------------------------------------------------------------------\n");
     printf("Search for Hot item or price of an item?(1/2):");
     fgets(tempstr, 2, stdin);
@@ -206,7 +206,7 @@ void Search_inv()
     if(strcmp(tempstr, "1") == 0)
     {
         printf("-------------------------------------------------------------------\n");
-        Hot_item();
+        Hot_Item();
     }
     else if(strcmp(tempstr, "2") == 0)
     {
@@ -264,9 +264,9 @@ void Search_inv()
         printf("Invalid Input\n");
     }
 }
-void Hot_item()
+void Hot_Item()
 {
-    Inv_cnt = Read_inv();
+    Inv_cnt = Read_Inv();
     Trn_cnt = Read_Trn();
     int Sold_qty[Inv_cnt], item_barcode[Inv_cnt], Sold_item_Cnt = 0, Hot[Inv_cnt], pass, last, l;
     char Input[30];
@@ -354,16 +354,16 @@ void start_admin()
         if(Access == 1)
         {
             printf("-------------------------------------------------------------------\n");
-			printf("Hello %s, id:%d\n", User[User_ID].Name, User[User_ID].id);
+			printf("Hello %s, ID:%d\n", User[User_ID].Name, User[User_ID].id);
             printf("-------------------------------------------------------------------\n");
 		    printf("Sub Menu Name\n");
 		    printf("1. Inventory LIST\n");
-            printf("2. Inventory LIST(Category with sorting)\n");
-            printf("3. Inventory LIST(Product with sorting)\n");
+            printf("2. Inventory LIST(Category With Sorting)\n");
+            printf("3. Inventory LIST(Product With Sorting)\n");
             printf("4. Add New Inventory\n");
             printf("5. Edit Inventory\n");
             printf("6. Update Inventory\n");
-            printf("7. Summary of the month\n");
+            printf("7. Summary Of The Month\n");
             printf("8. Transaction LIST\n");
 		    printf("9. Quit\n");
 		    printf("Select a function: ");
@@ -374,29 +374,29 @@ void start_admin()
 		    if(strcmp(tempstr,"1") == 0)
             {
                 printf("-------------------------------------------------------------------\n");
-			    Inv_cnt = Read_inv();
-			    Print_inv();
+			    Inv_cnt = Read_Inv();
+			    Print_Inv();
             }
             else if(strcmp(tempstr,"2") == 0)
             {
                 printf("-------------------------------------------------------------------\n");
-                Inv_cnt = Read_inv();
-                Print_inv_in_order(item, 1);
+                Inv_cnt = Read_Inv();
+                Print_Inv_in_order(item, 1);
             }
             else if(strcmp(tempstr,"3") == 0)
             {
                 printf("-------------------------------------------------------------------\n");
-                Inv_cnt = Read_inv();
-                Print_inv_in_order(item, 0);
+                Inv_cnt = Read_Inv();
+                Print_Inv_in_order(item, 0);
             }
             else if(strcmp(tempstr,"4") == 0)
             {
-                Inv_cnt = Read_inv();
-                New_inv();
+                Inv_cnt = Read_Inv();
+                New_Inv();
             }
             else if(strcmp(tempstr,"5") == 0)
             {
-                Edit_inv();
+                Edit_Inv();
             }
             else if(strcmp(tempstr, "6") == 0)
             {
@@ -436,7 +436,6 @@ int Authentication()
     printf("-------------------------------------------------------------------\n");
     printf("Name/Id:");
     fgets(Input, 30, stdin);
-    Read_User();
     if(Check_User(Input, 1) == 1)
     {
         printf("Password:");
@@ -526,14 +525,14 @@ int Check_User(char Input[30], int Admin)
 int Read_User()
 {
     fp = fopen("user.txt", "r");
-    fgets(tempstr, 99, fp);
-    Cnt = 0;
     if(fp == NULL)
     {
         printf("Can't open or find User file\n");
-        printf("COntact Staff\n");
+        printf("Contact Staff\n");
         return 0;
     }
+    fgets(tempstr, 99, fp);
+    Cnt = 0;
     while(!feof(fp))
     {
         Cnt++;
@@ -555,17 +554,17 @@ int Read_User()
         return 0;
     }
 }
-int Read_inv()
+int Read_Inv()
 {
     fp = fopen("inventory.txt", "r");
-    fgets(tempstr, 99 ,fp);
-    Cnt = 0;
     if(fp == NULL)
     {
         printf("Can't open or find Inventory file\n");
-        printf("COntact Staff\n");
+        printf("Contact Staff\n");
         return 0;
     }
+    fgets(tempstr, 99 ,fp);
+    Cnt = 0;
     while(!feof(fp))
     {
         Cnt++;
@@ -591,14 +590,14 @@ int Read_inv()
         return 0;
     }
 }
-void Print_inv()
+void Print_Inv()
 {
     for(i = 1;i <= Inv_cnt;i++)
     {
         printf("%d.Category:%s\nBrand:%s\nProduct:%s\nPrice:$%0.2f\nBarcode:%d\n\n", i, item[i].category, item[i].brand, item[i].product, item[i].price, item[i].barcode);
     }
 }
-void Print_inv_in_order(struct itemType tempitem[], int sort)
+void Print_Inv_in_order(struct itemType tempitem[], int sort)
 {
     int pass, last, order;
     printf("Ascending or Descending(1/2):");
@@ -710,7 +709,7 @@ void Print_inv_in_order(struct itemType tempitem[], int sort)
         printf("%d.Category:%s\nBrand:%s\nProduct:%s\nPrice:$%0.2f\nBarcode:%d\n\n", i, tempitem[i].category, tempitem[i].brand, tempitem[i].product, tempitem[i].price, tempitem[i].barcode);
     }
 }
-void New_inv()
+void New_Inv()
 {
     char Continue;
     do
@@ -755,18 +754,18 @@ void Write_Inv()
     fclose(fp);
     printf("New Inventory\n");
     printf("-------------------------------------------------------------------\n");
-    Print_inv();
+    Print_Inv();
     printf("-------------------------------------------------------------------\n");
 }
-void Edit_inv()
+void Edit_Inv()
 {
     char Continue;
     int Inv_No;
     do
     {
         printf("-------------------------------------------------------------------\n");
-        Inv_cnt = Read_inv();
-        Print_inv();
+        Inv_cnt = Read_Inv();
+        Print_Inv();
         printf("Which Inventory do you want to change(No.):");
         fgets(tempstr, 5, stdin);
         Inv_No = atoi(tempstr);
@@ -899,7 +898,7 @@ void Complete_Trn(int Positive)
 void Summary()
 {
     int Temp_ID = User_ID;
-    Inv_cnt = Read_inv();
+    Inv_cnt = Read_Inv();
     Trn_cnt = Read_Trn();
     printf("Summary Of The Month:\n");
     printf("-------------------------------------------------------------------\n");
@@ -908,20 +907,20 @@ void Summary()
         printf("%d. %-38s Remaining:%d\n", k, item[k].product, Stockcount(item[k].barcode));
     }
     printf("-------------------------------------------------------------------\n");
-    Hot_item();
+    Hot_Item();
     User_ID = Temp_ID;
 }
 int Read_Trn()
 {
     fp = fopen("transaction.txt", "r");
     fgets(tempstr, 99, fp);
-    Cnt = 0;
     if(fp == NULL)
     {
         printf("Can't open or find transaction file\n");
-        printf("COntact Staff\n");
+        printf("Contact Staff\n");
         return 0;
     }
+    Cnt = 0;
     while(!feof(fp))
     {
         Cnt++;
