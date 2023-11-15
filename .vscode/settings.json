@@ -6,6 +6,6 @@
         "cdefs.h": "c",
         "time.h": "c"
     },
-    "zenMode.hideLineNumbers": false,
+    "zenMode.hideLineNumbers": true,
     "C_Cpp.default.compilerPath": "/usr/bin/gcc"
 }
