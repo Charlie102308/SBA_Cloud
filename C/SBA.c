@@ -949,7 +949,6 @@ int Read_Trn()
     }
 }
 void Print_Trn()
-
 {
     for(i = 1;i <= Trn_cnt;i++)
     {
